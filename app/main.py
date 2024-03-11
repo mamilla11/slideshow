@@ -11,8 +11,10 @@ load_dotenv()
 
 
 IMAGE_FOLDER = 'app/Samples'
+PORT = os.environ.get('PORT', '/dev/tty0')
 BAUDRATE = int(os.environ.get('BAUDRATE', 9600))
 SCALE_FACTOR = float(os.environ.get('SCALE_FACTOR', 0.5))
+print(PORT)
 
 
 # Initialize image viewer
@@ -59,14 +61,19 @@ def quit():
 def run():
     image_files = list_images(IMAGE_FOLDER)
     current_image_index = 0
+    port = serial.Serial(PORT, baudrate=BAUDRATE, timeout=1)
+    display_image(image_files[current_image_index])
 
-    clock = pygame.time.Clock()
     while not quit():
+        command = port.readline().strip().decode('utf-8')
+        print(command)  # TODO: for debug, remove later
+        if not command == 'Next':
+            continue
         current_image_index = (current_image_index + 1) % len(image_files)
         display_image(image_files[current_image_index])
         pygame.display.update()
-        clock.tick(1)
 
+    port.close()
     pygame.quit()
 
 
