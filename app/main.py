@@ -14,7 +14,6 @@ IMAGE_FOLDER = 'app/Samples'
 PORT = os.environ.get('PORT', '/dev/tty0')
 BAUDRATE = int(os.environ.get('BAUDRATE', 9600))
 SCALE_FACTOR = float(os.environ.get('SCALE_FACTOR', 0.5))
-print(PORT)
 
 
 # Initialize image viewer
@@ -61,8 +60,9 @@ def quit():
 def run():
     image_files = list_images(IMAGE_FOLDER)
     current_image_index = 0
-    port = serial.Serial(PORT, baudrate=BAUDRATE, timeout=1)
     display_image(image_files[current_image_index])
+
+    port = serial.Serial(PORT, baudrate=BAUDRATE, timeout=1)
 
     while not quit():
         command = port.readline().strip().decode('utf-8')
